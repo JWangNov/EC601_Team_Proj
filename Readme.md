@@ -3,7 +3,7 @@
 ## Sprint 1:
 ### Product Definition
 #### 1) Product Mission
-Build a model to classify cloud organization patterns from satellite images. If successful, you’ll help scientists to better understand how clouds will shape our future climate. This research will guide the development of next-generation models which could reduce uncertainties in climate projections.<br/>
+Build a model to classify cloud organization patterns from satellite images. If successful, it will help scientists to better understand how clouds will shape our future climate. This project will guide the development of next-generation models which could reduce uncertainties in climate projections.<br/>
 #### 2) Target User(s)
 •	 Climates scientists who want to better understand how clouds will shape our future climate.<br/><br/>
 •	 Weather station that wants to provide more precise weather forecasting.<br/><br/>
