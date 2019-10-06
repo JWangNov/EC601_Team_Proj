@@ -14,10 +14,67 @@ As a climate scientist, I want to create a model to better classify cloud organi
 **Major components:** A recognize pattern to learn and analyze cloud images.<br/><br/>
 **Technology need to develop and analysis:** There are many ways in which clouds can organize, but the boundaries between different forms of organization are murky. This makes it challenging to build traditional rule-based algorithms to separate cloud features. <br/>
 
+### Industry Review and Analysis
+*Image Recognition*
 
+#### Apple Photos App
 
+a typical Apple stuff...
 
+#### CatAndDogRecognizer
+[https://github.com/klevis/CatAndDogRecognizer](https://github.com/klevis/CatAndDogRecognizer)
 
+* Java
+* Deep Neural Networks (Deeplearning4j)
+* VGG - 16 architecture (convolution architecture, to simplify the training process)
 
+##### License
+[**EPL**](https://www.eclipse.org/legal/epl-v10.html)
 
+Permissions:
+
+- Commercial use
+- Distribution
+- Modification
+- Patent use
+- Private use
+
+Limitations:
+
+- Liability
+- Warranty
+
+Conditions:
+
+- Disclose source
+- License and copyright notice
+- Same license
+
+#### cntk-hotel-pictures-classificator
+[https://github.com/karolzak/cntk-hotel-pictures-classificator](https://github.com/karolzak/cntk-hotel-pictures-classificator)
+
+can recognize pictures of hotel stuffs (sink, bed, lamp, pillow), and classify them
+
+* Python
+* CNTK (Microsoft Cognitive Toolkit)
+* FasterRCNN (Region-CNN)
+
+##### License
+[**MIT**](https://www.mit.edu/~amini/LICENSE.md)
+
+Permissions:
+
+- Commercial use
+- Modification
+- Distribution
+- Private use
+
+Limitations:
+
+- Liability
+- Warranty
+
+Conditions:
+
+- License and copyright notice
 
