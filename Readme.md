@@ -113,5 +113,5 @@ Use GPU to make training be faster.
 * Python
 * PyTorch
 * CNN
-** Vanilla U-Net (or we can use LinkNet)
-** Deterministic behavior for reproducibility
+  * Vanilla U-Net (or we can use LinkNet)
+  * Deterministic behavior for reproducibility
