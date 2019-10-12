@@ -78,3 +78,40 @@ Conditions:
 
 - License and copyright notice
 
+### Kaggle Notebooks Analysis
+Some Ideas Shared on Kaggle
+
+#### [EDA: Find Me In The Clouds](https://www.kaggle.com/ekhtiar/eda-find-me-in-the-clouds#Drawing-Clouds)
+***Pretreatment of the Training Data***
+
+Firstly, analyze the training data. 
+Explore the correlation between different types of cloud. 
+
+Then explore the data pictures. 
+To know how many types of clouds we have per image normally. 
+
+Next, mask. 
+Draw cloud shapes on images. 
+A mask not outlining the exact clouds but roughly the area with the same kind of patterns. 
+This is to cut off the parts that we don't want to use in training, improving the accuracy of training.
+
+Finally, visualize the result. 
+TBH this step is not necessary for the Kaggle project. 
+But it's valuable for those users who want to learn other things from the cloud patterns. 
+
+* Python
+* cv2
+* Pandas
+* NumPy
+
+#### [Image Segmentation From scratch using Pytorch](https://www.kaggle.com/dhananjay3/image-segmentation-from-scratch-in-pytorch)
+***To Build a Training Neural Network***
+
+Use vanilla U-Net Architecture to mask images and training. 
+Use GPU to make training be faster. 
+
+* Python
+* PyTorch
+* CNN
+** Vanilla U-Net (or we can use LinkNet)
+** Deterministic behavior for reproducibility
