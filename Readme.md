@@ -115,3 +115,10 @@ Use GPU to make training be faster.
 * CNN
   * Vanilla U-Net (or we can use LinkNet)
   * Deterministic behavior for reproducibility
+  
+ ### What type of CNN architecture will we use?
+
+AlexNet uses mostly large convolutions of 11x11 and 5x5. For 11x11 large convolution kernels with stride=4, the original size of the graph is large and the error is also very large.In another word, the larger the convolution kernel brings the larger the amount of calculation.
+
+The one we will use, VGGNet, only use a 3x3 convolution. Because the convolution is entirely related to the amount of calculation, it also affects the receptive field. The former is related to whether it is convenient to deploy to the mobile terminal, whether it can meet real-time processing, whether it can be trained, etc.. The receptive field is related to parameter update, the size of the feature map, the complexity of the model and the parameter quantity.
+
