@@ -1,0 +1,114 @@
+# 导入validation
+encoded_pixels = []
+loaders = {"infer": valid_loader}
+runner.infer(
+    model=model,
+    loaders=loaders,
+    # 保存callback
+    callbacks=[
+        CheckpointCallback(
+            resume=f"{logdir}/checkpoints/best.pth"),
+        InferCallback()
+    ],
+)
+valid_masks = []
+probabilities = np.zeros((2220, 350, 525), dtype = np.float32)
+
+# tqdm进度条库
+for i, (batch, output) in enumerate(tqdm.tqdm(zip(
+        valid_dataset, runner.callbacks[0].predictions["logits"]))):
+    image, mask = batch
+    for m in mask:
+        # 如果mask的大小与(250,525)不同，强制转化
+        if m.shape != (350, 525):
+            m = cv2.resize(m, dsize=(525, 350), interpolation=cv2.INTER_LINEAR)
+        valid_masks.append(m)
+        # output是刚才的预测概率，装进probability里
+    for j, probability in enumerate(output):
+        if probability.shape != (350, 525):
+            probability = cv2.resize(probability, dsize=(525, 350), interpolation=cv2.INTER_LINEAR)
+        probabilities[i * 4 + j, :, :] = probability
+
+# 清空显存
+torch.cuda.empty_cache()
+# 垃圾内存回收
+gc.collect()
+
+# predictions on validation dataset
+# optimize thresholds
+# 列出不同阈值和对应的准确率
+class_params = {}
+for class_id in range(4):
+    print(class_id)
+    attempts = []
+    for t in range(0, 100, 5):
+        t /= 100
+        for ms in [5000, 10000, 15000, 20000, 22500, 25000]:
+            masks = []
+            for i in range(class_id, len(probabilities), 4):
+                probability = probabilities[i]
+                predict, num_predict = post_process(sigmoid(probability), t, ms)
+                masks.append(predict)
+
+            d = []
+            for i, j in zip(masks, valid_masks[class_id::4]):
+                if (i.sum() == 0) & (j.sum() == 0):
+                    d.append(1)
+                else:
+                    d.append(dice(i, j))
+
+            attempts.append((t, ms, np.mean(d)))
+
+    attempts_df = pd.DataFrame(attempts, columns=['threshold', 'size', 'dice'])
+    # 对这个dataframe进行排序
+    attempts_df = attempts_df.sort_values('dice', ascending=False)
+    print(attempts_df.head())
+    # 得到最好的阈值
+    best_threshold = attempts_df['threshold'].values[0]
+    best_size = attempts_df['size'].values[0]
+
+    class_params[class_id] = (best_threshold, best_size)
+# 清空内存
+del masks
+del valid_masks
+del probabilities
+gc.collect()
+
+print(class_params)
+
+attempts_df = pd.DataFrame(attempts, columns=['threshold', 'size', 'dice'])
+attempts_df.groupby(['threshold'])['dice'].max()
+attempts_df.groupby(['size'])['dice'].max()
+attempts_df = attempts_df.sort_values('dice', ascending=False)
+attempts_df.head(10)
+# 这两句不是python格式
+# 画出Threshold 和 minsize， dice的关系
+# sns.lineplot(x='threshold', y='dice', hue='size', data=attempts_df);
+# plt.title('Threshold and min size vs dice');
+best_threshold = attempts_df['threshold'].values[0]
+best_size = attempts_df['size'].values[0]
+
+for i, (input, output) in enumerate(zip(
+        valid_dataset, runner.callbacks[0].predictions["logits"])):
+    image, mask = input
+
+    image_vis = image.transpose(1, 2, 0)
+    mask = mask.astype('uint8').transpose(1, 2, 0)
+    pr_mask = np.zeros((350, 525, 4))
+    for j in range(4):
+        probability = cv2.resize(output[:, :, j], dsize=(525, 350), interpolation=cv2.INTER_LINEAR)
+        pr_mask[:, :, j], _ = post_process(sigmoid(probability), class_params[j][0], class_params[j][1])
+    # pr_mask = (sigmoid(output) > best_threshold).astype('uint8').transpose(1, 2, 0)
+
+    visualize_with_raw(image=image_vis, mask=pr_mask, original_image=image_vis, original_mask=mask,
+                       raw_image=image_vis, raw_mask=output.transpose(1, 2, 0))
+
+    if i >= 2:
+        break
+
+
+torch.cuda.empty_cache()
+gc.collect()
+
+sub['EncodedPixels'] = encoded_pixels
+sub.to_csv('submission.csv', columns=['Image_Label', 'EncodedPixels'], index=False)
