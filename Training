@@ -1,0 +1,72 @@
+# 网络模型
+ENCODER = 'resnet34'
+# 权重参数
+ENCODER_WEIGHTS = 'imagenet'
+# 用不用CUDA
+DEVICE = 'cuda'
+# 激活函数 难道用none？？？？
+ACTIVATION = None
+
+# 模型设置 https://github.com/qubvel/segmentation_models.pytorch
+model = smp.Unet(
+    encoder_name=ENCODER,
+    encoder_weights=ENCODER_WEIGHTS,
+    # 4种云
+    classes=4,
+    activation=ACTIVATION,
+)
+# All models have pretrained encoders, so you have to prepare your data the same way as during weights pretraining
+preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+
+# 线程数量是0？
+num_workers = 0
+# batch size
+bs = 8
+# dataset和dataloader
+train_dataset = CloudDataset(df=train, datatype='train', img_ids=train_ids, transforms = get_training_augmentation(), preprocessing=get_preprocessing(preprocessing_fn))
+valid_dataset = CloudDataset(df=train, datatype='valid', img_ids=valid_ids, transforms = get_validation_augmentation(), preprocessing=get_preprocessing(preprocessing_fn))
+
+train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=num_workers)
+valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=num_workers)
+
+loaders = {
+    "train": train_loader,
+    "valid": valid_loader
+}
+# 轮次
+num_epochs = 19
+# 路径
+logdir = "./logs/segmentation"
+
+# model, criterion, optimizer
+optimizer = torch.optim.Adam([
+    {'params': model.decoder.parameters(), 'lr': 1e-2},
+    {'params': model.encoder.parameters(), 'lr': 1e-3},
+])
+# 随着进步减缓降低学习率
+scheduler = ReduceLROnPlateau(optimizer, factor=0.15, patience=2)
+# 损失函数计算
+criterion = smp.utils.losses.BCEDiceLoss(eps=1.)
+# from catalyst.dl.runner import SupervisedRunner
+runner = SupervisedRunner()
+
+'''
+Training section
+'''
+runner.train(
+    model=model,
+    criterion=criterion,
+    optimizer=optimizer,
+    scheduler=scheduler,
+    loaders=loaders,
+    callbacks=[DiceCallback(), EarlyStoppingCallback(patience=5, min_delta=0.001)],
+    logdir=logdir,
+    num_epochs=num_epochs,
+    verbose=True
+)
+# 画loss_function的图
+utils.plot_metrics(
+    logdir=logdir,
+    # specify which metrics we want to plot
+    metrics=["loss", "dice", 'lr', '_base/lr']
+)
