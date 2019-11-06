@@ -122,3 +122,6 @@ AlexNet uses mostly large convolutions of 11x11 and 5x5. For 11x11 large convolu
 
 The one we will use, VGGNet, only use a 3x3 convolution. Because the convolution is entirely related to the amount of calculation, it also affects the receptive field. The former is related to whether it is convenient to deploy to the mobile terminal, whether it can meet real-time processing, whether it can be trained, etc.. The receptive field is related to parameter update, the size of the feature map, the complexity of the model and the parameter quantity.
 
+
+## Sprint 2:
+Here is the link of our sprint 2 ppt: [I'm an link](https://docs.google.com/presentation/d/1ZT6Eodb4dmsTn1uR_y3fO0a85NxfGmS4a7dBGuCLxq4/edit#slide=id.g65ad937ca4_5_33)
