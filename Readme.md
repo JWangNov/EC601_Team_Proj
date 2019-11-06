@@ -124,4 +124,4 @@ The one we will use, VGGNet, only use a 3x3 convolution. Because the convolution
 
 
 ## Sprint 2:
-Here is the link of our sprint 2 ppt: [I'm an link](https://docs.google.com/presentation/d/1ZT6Eodb4dmsTn1uR_y3fO0a85NxfGmS4a7dBGuCLxq4/edit#slide=id.g65ad937ca4_5_33)
+Here is the link of our sprint 2 ppt: [I'm an link](https://docs.google.com/presentation/d/1ZT6Eodb4dmsTn1uR_y3fO0a85NxfGmS4a7dBGuCLxq4/edit#slide=id.p)
