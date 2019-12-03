@@ -125,3 +125,7 @@ The one we will use, VGGNet, only use a 3x3 convolution. Because the convolution
 
 ## Sprint 2:
 Here is the link of our sprint 2 ppt: [I'm an link](https://docs.google.com/presentation/d/1ZT6Eodb4dmsTn1uR_y3fO0a85NxfGmS4a7dBGuCLxq4/edit#slide=id.p)
+
+### kaggle Solutions Analysis
+Link [Click me]
+(https://github.com/JWangNov/EC601_Team_Proj/blob/master/KaggleAnalysis.md)
